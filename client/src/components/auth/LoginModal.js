@@ -13,24 +13,22 @@ import {
 } from 'reactstrap';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../../actions/authActions';
+import { login } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
 
-
-const RegisterModal = (props) => {
+const LoginModal = (props) => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const error = useSelector(state => state.error);
 
   const [modal, setModal] = useState({
     isOpen: false,
-    name: '',
     email: '',
     password: '',
     msg: null
   });
 
- const toggle = useCallback(() => {
+  const toggle = useCallback(() => {
     // Clear errors
     dispatch(clearErrors());
     setModal(prevState => {
@@ -64,6 +62,7 @@ const RegisterModal = (props) => {
           toggle();
         }
   }, [modal, isAuthenticated, toggle])
+
   
 
   const onChange = (e) => {
@@ -75,17 +74,14 @@ const RegisterModal = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { name, email, password } = modal;
+    const { email, password } = modal;
 
-    // Create a user object
-    const newUser = {
-      name,
+    const user = {
       email,
       password
-    };
-
-    // Attempt to register
-    dispatch(register(newUser));
+    }
+    // Attempt to login
+    dispatch(login(user));
 
     // Close the modal
     // toggle();
@@ -95,26 +91,17 @@ const RegisterModal = (props) => {
   return (
     <div>
       <NavLink onClick={toggle} href="#">
-        Register
+        Login
       </NavLink>
       <Modal
         isOpen={modal.isOpen}
         toggle={toggle}
       >
-        <ModalHeader toggle={toggle}>Register</ModalHeader>
+        <ModalHeader toggle={toggle}>Login</ModalHeader>
         <ModalBody>
           { modal.msg ? <Alert color="danger">{ modal.msg }</Alert> : null}
           <Form onSubmit={onSubmit}>
             <FormGroup>
-              <Label for="name">Name</Label>
-              <Input 
-                type="text" 
-                name="name" 
-                id="name" 
-                placeholder="Name"
-                className="mb-3"
-                onChange={onChange}
-              />
               <Label for="email">Email</Label>
               <Input 
                 type="email" 
@@ -128,7 +115,7 @@ const RegisterModal = (props) => {
               <Input 
                 type="password" 
                 name="password" 
-                id="password"
+                id="password" 
                 placeholder="Password"
                 className="mb-3"
                 onChange={onChange}
@@ -138,7 +125,7 @@ const RegisterModal = (props) => {
                 color="dark"
                 style={{marginTop: '2rem'}}
                 block
-              >Register</Button>
+              >Login</Button>
             </FormGroup>
           </Form>
         </ModalBody>
@@ -147,4 +134,4 @@ const RegisterModal = (props) => {
   )
 }
 
-export default RegisterModal
+export default LoginModal

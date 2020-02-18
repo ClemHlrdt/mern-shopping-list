@@ -3,8 +3,10 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../actions/authActions';
 import {NavLink} from 'reactstrap';
 
+
 const Logout = (props) => {
   const dispatch = useDispatch();
+
   return (
     <Fragment>
       <NavLink onClick={() => dispatch(logout())} href="#">

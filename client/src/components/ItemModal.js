@@ -11,21 +11,22 @@ import {
 } from 'reactstrap';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../actions/itemActions';
-
+import { useSelector } from 'react-redux';
 
 
 const ItemModal = (props) => {
   const dispatch = useDispatch();
-
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  
   const [modal, setModal] = useState({
-    modal: false,
+    isOpen: false,
     name: ''
   });
 
   const toggle = () => {
     setModal({
       ...modal,
-      modal: !modal.modal
+      isOpen: !modal.isOpen
     });
   }
 
@@ -49,13 +50,14 @@ const ItemModal = (props) => {
   }
   return (
     <div>
-      <Button
+      {isAuthenticated ? <Button
         color="dark"
         style={{marginBottom: '2rem'}}
         onClick={toggle}
-      >Add Item</Button>
+      >Add Item</Button> : <h4 className="mb-3 ml-4">Please log in to manage items.</h4>}
+      
       <Modal
-        isOpen={modal.modal}
+        isOpen={modal.isOpen}
         toggle={toggle}
       >
         <ModalHeader toggle={toggle}>Add To Shopping List</ModalHeader>

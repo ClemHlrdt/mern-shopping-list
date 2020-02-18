@@ -13,22 +13,22 @@ const ShoppingList = (props) => {
     dispatch(getItems());
   }, [dispatch]);
 
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   return (
     <Container>
-      
         <ListGroup>
           <TransitionGroup className="shopping-list">
             {items.map(({_id, name}) => (
               <CSSTransition key={_id} timeout={500} classNames="fade">
                 <ListGroupItem>
-                <Button
+                {isAuthenticated ? <Button
                   className="remove-btn"
                   color="danger"
                   size="sm"
                   onClick={() => {
                     dispatch(deleteItem(_id))
                   }}
-                >&times;</Button>
+                >&times;</Button> : null}
                 {name}
                 </ListGroupItem>
               </CSSTransition>
