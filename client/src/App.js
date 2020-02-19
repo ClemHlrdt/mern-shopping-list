@@ -27,7 +27,6 @@ function App() {
         <Container>
           <ItemModal/>
           <ShoppingList/>
-          {/* {isLoading ? <Spinner /> : null} */}
         </Container>
       </div>
     </Provider>

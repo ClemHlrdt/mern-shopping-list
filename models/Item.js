@@ -7,12 +7,27 @@ const ItemSchema = new Schema({
     type: String,
     required: true
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   date: {
     type: Date,
     default: Date.now
   }
 });
 
-const Item = mongoose.model('item', ItemSchema)
+ItemSchema.statics.getCount = function(){
+  return this.aggregate([
+    {
+      $group: {
+        _id: null, 
+        total: {
+          $sum: 1
+        }
+      }
+    }
+    ])
+}
 
-module.exports = Item;
+module.exports = mongoose.model('Item', ItemSchema);

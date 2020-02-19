@@ -10,6 +10,7 @@ const Item = require('../../models/Item');
 router.get('/', (req, res) => {
   Item.find()
     .sort({ date: -1})
+    .populate("user", "name")
     .then(items => res.json(items))
 });
 
@@ -18,13 +19,22 @@ router.get('/', (req, res) => {
 // @access  Private
 router.post('/', auth ,(req, res) => {
   const newItem = new Item({
-    name: req.body.name
+    name: req.body.name,
+    user: req.user.id
   });
 
   newItem
-    .save()
-    .then(item => res.json(item))
-    .catch(err => console.error(err));
+    .save((err, item) => {
+      if(err) return console.error(err);
+      Item
+        .findOne(newItem)
+        .populate("user","name")
+        .exec(function(err, item){
+          res.json(item);
+      });
+    });
+    //.then(item => res.json(item))
+    //.catch(err => console.error(err));
 });
 
 // @route   DELETE api/items/:id
@@ -32,7 +42,8 @@ router.post('/', auth ,(req, res) => {
 // @access  Private
 router.delete('/:id', auth, (req, res) => {
   Item.findById(req.params.id)
-    .then(item => item.remove().then(() => res.json({success: true})))
+    .then(item => {
+      item.remove().then(() => res.json({success: true}))})
     .catch(err => res.status(404).json({success: false}));
 });
 
